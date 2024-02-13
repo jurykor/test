@@ -30,6 +30,14 @@ jobs:
       - name: Checkuot source
         uses: actions/checkout@v4
 
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          key:  app-win-artifacts
+          path: |
+            ./target
+            ./build
+
       - run: |
           mkdir -p ./build
           mkdir -p ./target
@@ -67,6 +75,14 @@ jobs:
     steps:
       - name: Checkuot source
         uses: actions/checkout@v4
+
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          key:  app-win-artifacts
+          path: |
+            ./target
+            ./build
 
       - run: |
           mkdir -p ./build
