@@ -51,9 +51,9 @@ jobs:
         if: ${{ inputs.upload-artifact }}
         uses: softprops/action-gh-release@v1
         with:
-          name: app ${{ github.ref_name}}-${{ github.sha }}
-          tag_name: app-${{ github.sha }}
-          target_commitish: ${{ github.sha }}
+          # name: app ${{ inputs.app-ver }}
+          tag_name: ${{ inputs.upload-tag }}
+          # target_commitish: ${{ github.sha }}
           draft: true
           prerelease: true
           files: |
@@ -89,9 +89,9 @@ jobs:
         if: ${{ inputs.upload-artifact }}
         uses: softprops/action-gh-release@v1
         with:
-          name: app ${{ github.ref_name}}-${{ github.sha }}
-          tag_name: app-${{ github.sha }}
-          target_commitish: ${{ github.sha }}
+          # name: app ${{ inputs.app-ver }}
+          tag_name: ${{ inputs.upload-tag }}
+          # target_commitish: ${{ github.sha }}
           draft: true
           prerelease: true
           files: |
