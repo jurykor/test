@@ -51,9 +51,6 @@ jobs:
           name: build-lib-artifact
           path: ./target/lib/
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Build win
         run: |
           rsync -acv --delete --delete-excluded --exclude='lib/' --exclude='lin/' ./src/ ./build/
@@ -99,9 +96,6 @@ jobs:
         with:
           name: build-lib-artifact
           path: ./target/lib/
-
-      - name: Display structure of downloaded files
-        run: ls -R
 
       - name: Build lin
         run: |
