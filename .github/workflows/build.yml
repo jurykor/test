@@ -1,5 +1,4 @@
-name: Build application
-
+name: Build
 on:
   workflow_dispatch:
     inputs:
