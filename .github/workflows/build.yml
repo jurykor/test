@@ -1,76 +1,30 @@
-name: Build project
+name: Build application
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      upload-artifact:
-        type: boolean
-        default: true
-      upload-tag:
-        type: string
-        default: "nightly"
       do-win:
         type: boolean
         default: true
+        required: true
       do-lin:
         type: boolean
         default: true
+        required: true
+      app-ver:
+        type: string
+        default: "dev"
+        required: true
+      upload-tag:
+        type: string
+        default: "dev"
+        required: true
+      upload-artifact:
+        type: boolean
+        default: true
+        required: true
 
 jobs:
-
-  build-for-win:
-    if: ${{ inputs.do-win }}
-    name: build-for-windows
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkuot source
-        uses: actions/checkout@v4
-
-      - name: Build lib
-        run: |
-          mkdir -p ./build/lib
-          rsync -av --exclude ./src/win/ --exclude ./src/lin ./src/ ./build/
-
-      - name: Build win
-        run: |
-          mkdir -p ./build/win
-          tar --exclude ./src/lin/ --exclude ./src/lib/ -cf ./build/lib/lib.tar ./src/*
-  
-
-      - name: Publish artifacts
-        if: ${{ inputs.upload-artifact }}
-        uses: softprops/action-gh-release@v1
-        with:
-          name: app ${{ github.ref_name}}-${{ github.sha }}
-          tag_name: app-${{ github.sha }}
-          target_commitish: ${{ github.sha }}
-          draft: true
-          prerelease: true
-          files: |
-            ./build/win/app-*.tgz
-
-  build-for-lin:
-    if: ${{ inputs.do-lin }}
-    name: build-for-linux
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkuot source
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          ls -la
-
-      - name: Publish artifacts
-        if: ${{ inputs.upload-artifact }}
-        uses: softprops/action-gh-release@v1
-        with:
-          name: app ${{ github.ref_name}}-${{ github.sha }}
-          tag_name: app-${{ github.sha }}
-          target_commitish: ${{ github.sha }}
-          draft: true
-          prerelease: true
-          files: |
-            ./build/win/lin-*.tgz
+    run-build-app:
+        uses: ./.github/workflows/build-app.yml
+        secrets: inherit

@@ -1,0 +1,98 @@
+name: Build project
+
+on:
+  workflow_call:
+    inputs:
+      do-win:
+        type: boolean
+        default: true
+      do-lin:
+        type: boolean
+        default: true
+      app-ver:
+        type: string
+        default: "dev"
+      upload-tag:
+        type: string
+        default: "dev"
+      upload-artifact:
+        type: boolean
+        default: true
+
+jobs:
+
+  build-for-win:
+    if: ${{ inputs.do-win }}
+    name: build-for-windows
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkuot source
+        uses: actions/checkout@v4
+
+      - run: |
+          mkdir -p ./build
+          mkdir -p ./target
+
+      - name: Build lib
+        run: |
+          rsync -acv --delete --delete-excluded --exclude='win/' --exclude='lin/' ./src/ ./build/
+          mkdir -p ./target/lib
+          tar --exclude='*.tar' -c -f ./target/lib/lib.tar ./build/*
+
+      - name: Build win
+        run: |
+          rsync -acv --delete --delete-excluded --exclude='lib/' --exclude='lin/' ./src/ ./build/
+          mkdir -p ./target/win
+          tar --exclude='*.tar' -c -f ./target/win/win.tar ./build/*
+          zip ./target/app-win-${{ inputs.app-ver }}.zip ./target/lib/lib.tar ./target/win/win.tar
+
+      - name: Publish artifacts
+        if: ${{ inputs.upload-artifact }}
+        uses: softprops/action-gh-release@v1
+        with:
+          name: app ${{ github.ref_name}}-${{ github.sha }}
+          tag_name: app-${{ github.sha }}
+          target_commitish: ${{ github.sha }}
+          draft: true
+          prerelease: true
+          files: |
+            ./target/app-win-${{ inputs.app-ver }}.zip
+
+  build-for-lin:
+    if: ${{ inputs.do-lin }}
+    name: build-for-linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkuot source
+        uses: actions/checkout@v4
+
+      - run: |
+          mkdir -p ./build
+          mkdir -p ./target
+
+      - name: Build lib
+        run: |
+          rsync -acv --delete --delete-excluded --exclude='win/' --exclude='lin/' ./src/ ./build/
+          mkdir -p ./target/lib
+          tar --exclude='*.tar' -c -f ./target/lib/lib.tar ./build/*
+
+      - name: Build lin
+        run: |
+          rsync -acv --delete --delete-excluded --exclude='lib/' --exclude='win/' ./src/ ./build/
+          mkdir -p ./target/lin
+          tar --exclude='*.tar' -c -f ./target/lin/lin.tar ./build/*
+          zip ./target/app-lin-${{ inputs.app-ver }}.zip ./target/lib/lib.tar ./target/lin/lin.tar
+
+      - name: Publish artifacts
+        if: ${{ inputs.upload-artifact }}
+        uses: softprops/action-gh-release@v1
+        with:
+          name: app ${{ github.ref_name}}-${{ github.sha }}
+          tag_name: app-${{ github.sha }}
+          target_commitish: ${{ github.sha }}
+          draft: true
+          prerelease: true
+          files: |
+            ./target/app-lin-*.zip
