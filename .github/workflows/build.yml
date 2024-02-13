@@ -24,6 +24,12 @@ on:
         required: true
 
 jobs:
-    run-build-app:
-        uses: ./.github/workflows/build-app.yml
-        secrets: inherit
+  run-build-app:
+    uses: ./.github/workflows/build-app.yml
+    secrets: inherit
+    with:
+      do-win: ${{ inputs.do-win }}
+      do-lin: ${{ inputs.do-lin }}
+      app-ver: ${{ inputs.app-ver }}
+      upload-tag: ${{ inputs.upload-tag }}
+      upload-artifact: ${{ inputs.upload-artifact }}
