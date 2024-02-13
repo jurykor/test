@@ -27,9 +27,16 @@ jobs:
       - name: Checkuot source
         uses: actions/checkout@v4
 
-      - name: Build
+      - name: Build lib
         run: |
-          ls -la
+          mkdir -p ./build/lib
+          rsync -av --exclude ./src/win/ --exclude ./src/lin ./src/ ./build/
+
+      - name: Build win
+        run: |
+          mkdir -p ./build/win
+          tar --exclude ./src/lin/ --exclude ./src/lib/ -cf ./build/lib/lib.tar ./src/*
+  
 
       - name: Publish artifacts
         if: ${{ inputs.upload-artifact }}
