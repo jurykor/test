@@ -41,7 +41,7 @@ jobs:
       - name: Cache build artifacts
         uses: actions/cache@v3
         with:
-          key:  app-win-artifacts-${{ hashFiles('**/lockfiles') }}
+          key:  app-win-cache-${{ hashFiles('**/lockfiles') }}
           path: |
             ./build
 
@@ -87,7 +87,7 @@ jobs:
       - name: Cache build artifacts
         uses: actions/cache@v3
         with:
-          key:  app-lin-artifacts-${{ hashFiles('**/lockfiles') }}
+          key:  app-lin-cache-${{ hashFiles('**/lockfiles') }}
           path: |
             ./build
 
