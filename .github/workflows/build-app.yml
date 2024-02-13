@@ -49,7 +49,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-lib-artifact
-          path: ./
+          path: ./target/lib/
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -98,7 +98,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-lib-artifact
-          path: ./
+          path: ./target/lib/
 
       - name: Display structure of downloaded files
         run: ls -R
