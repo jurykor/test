@@ -35,4 +35,4 @@ jobs:
         with:
           name: build-lib-artifact
           path: |
-            ./target/lib/lib.tar
+            ./target/lib/
