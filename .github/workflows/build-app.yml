@@ -61,7 +61,7 @@ jobs:
           tar --exclude='*.tar' -c -f ./target/win/win.tar ./build/*
           zip ./target/app-win-${{ inputs.app-ver }}.zip ./target/lib/lib.tar ./target/win/win.tar
 
-      - name: Publish artifacts
+      - name: Publish release
         if: ${{ inputs.upload-artifact }}
         uses: softprops/action-gh-release@v1
         with:
@@ -110,7 +110,7 @@ jobs:
           tar --exclude='*.tar' -c -f ./target/lin/lin.tar ./build/*
           zip ./target/app-lin-${{ inputs.app-ver }}.zip ./target/lib/lib.tar ./target/lin/lin.tar
 
-      - name: Publish artifacts
+      - name: Publish release
         if: ${{ inputs.upload-artifact }}
         uses: softprops/action-gh-release@v1
         with:
