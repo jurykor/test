@@ -53,7 +53,7 @@ jobs:
         with:
           # name: app ${{ inputs.app-ver }}
           tag_name: ${{ inputs.upload-tag }}
-          # target_commitish: ${{ github.sha }}
+          target_commitish: ${{ github.sha }}
           # draft: true
           prerelease: true
           files: |
@@ -91,7 +91,7 @@ jobs:
         with:
           # name: app ${{ inputs.app-ver }}
           tag_name: ${{ inputs.upload-tag }}
-          # target_commitish: ${{ github.sha }}
+          target_commitish: ${{ github.sha }}
           # draft: true
           prerelease: true
           files: |
