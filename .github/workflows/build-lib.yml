@@ -1,0 +1,39 @@
+name: Build lib
+
+on:
+  workflow_call:
+
+jobs:
+
+  build-for-win:
+    if: ${{ inputs.do-win }}
+    name: build-for-lib
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkuot source
+        uses: actions/checkout@v4
+
+      - name: Cache build artifacts
+        uses: actions/cache@v3
+        with:
+          key:  lib-artifacts-${{ hashFiles('**/lockfiles') }}
+          path: |
+            ./build
+
+      - run: |
+          mkdir -p ./build
+          mkdir -p ./target
+
+      - name: Build lib
+        run: |
+          rsync -acv --delete --delete-excluded --exclude='win/' --exclude='lin/' ./src/ ./build/
+          mkdir -p ./target/lib
+          tar --exclude='*.tar' -c -f ./target/lib/lib.tar ./build/*
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-lib-artifact
+          path: |
+            ./target/lib/lib.tar

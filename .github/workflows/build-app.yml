@@ -21,12 +21,20 @@ on:
 
 jobs:
 
+  build-for-lib:
+    uses: ./.github/workflows/build-lib.yml
+
   build-for-win:
     if: ${{ inputs.do-win }}
+    needs: [build-for-lib]
     name: build-for-windows
     runs-on: ubuntu-latest
 
     steps:
+      - run: |
+          mkdir -p ./build
+          mkdir -p ./target
+
       - name: Checkuot source
         uses: actions/checkout@v4
 
@@ -35,18 +43,12 @@ jobs:
         with:
           key:  app-win-artifacts-${{ hashFiles('**/lockfiles') }}
           path: |
-            ./target
             ./build
 
-      - run: |
-          mkdir -p ./build
-          mkdir -p ./target
-
-      - name: Build lib
-        run: |
-          rsync -acv --delete --delete-excluded --exclude='win/' --exclude='lin/' ./src/ ./build/
-          mkdir -p ./target/lib
-          tar --exclude='*.tar' -c -f ./target/lib/lib.tar ./build/*
+      - name: Download build-lib-artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-lib-artifact
 
       - name: Build win
         run: |
@@ -69,10 +71,15 @@ jobs:
 
   build-for-lin:
     if: ${{ inputs.do-lin }}
+    needs: [build-for-lib]
     name: build-for-linux
     runs-on: ubuntu-latest
 
     steps:
+      - run: |
+          mkdir -p ./build
+          mkdir -p ./target
+
       - name: Checkuot source
         uses: actions/checkout@v4
 
@@ -81,18 +88,12 @@ jobs:
         with:
           key:  app-lin-artifacts-${{ hashFiles('**/lockfiles') }}
           path: |
-            ./target
             ./build
 
-      - run: |
-          mkdir -p ./build
-          mkdir -p ./target
-
-      - name: Build lib
-        run: |
-          rsync -acv --delete --delete-excluded --exclude='win/' --exclude='lin/' ./src/ ./build/
-          mkdir -p ./target/lib
-          tar --exclude='*.tar' -c -f ./target/lib/lib.tar ./build/*
+      - name: Download build-lib-artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-lib-artifact
 
       - name: Build lin
         run: |
